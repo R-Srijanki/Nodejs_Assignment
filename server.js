@@ -143,7 +143,7 @@ app.get("/users",(req,res)=>{
     if(User.length==0) return res.status(404).json({message:"No data available"});
     res.status(200).send(User);
 })
-
+//get request on path /users/:id
 app.get("/users/:id",(req,res)=>{
     //to get id value from url 
     const userid=req.params.id;
@@ -155,4 +155,42 @@ app.get("/users/:id",(req,res)=>{
     }
     //send user data for requested id
     res.status(200).send(userdata);
+})
+
+//post request on /user to create new user
+app.post("/user",validatefields,(req,res)=>{
+    //get fields data from request body
+    const {firstName,lastName,hobbies}=req.body;
+    //fill data in newUser
+    const newUser={
+        id: Date.now(),
+        firstName:firstName,
+        lastName:lastName,
+        hobbies:hobbies
+    };
+    //push newUser into array User
+    User.push(newUser);
+    //send response
+    res.status(201).json({ message: 'User data added successfully', data: newUser});
+})
+
+//put request to edit user 
+app.put("/user/:id",validatefields,(req,res)=>{
+    const data=req.body;
+    //to get keys from req.body
+    const datakey=Object.keys(data);
+     const userid=req.params.id; //to get id value from url 
+    //to find requested id user data from array User
+     const userdata=User.find((user)=>user.id==userid);
+    //if data not found in User
+    if(!userdata){
+        return res.status(404).json({message:"User Not Found"});
+    }
+    //replace data in fields of requested id
+    datakey.forEach(key => {
+        userdata[key]=data[key];
+    });
+    const restdata=User.filter((user)=>user.id!=userid);
+    User.push(userdata);
+    res.status(201).json({ message: 'User data updated', data: userdata });
 })
