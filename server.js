@@ -136,3 +136,23 @@ const User=[
     "hobbies": ["photography", "filmmaking", "graphic design"]
   }
 ];
+
+//get request on path /users
+app.get("/users",(req,res)=>{
+    //to send User array
+    if(User.length==0) return res.status(404).json({message:"No data available"});
+    res.status(200).send(User);
+})
+
+app.get("/users/:id",(req,res)=>{
+    //to get id value from url 
+    const userid=req.params.id;
+    //to find requested id user data from array User
+    const userdata=User.find((user)=>user.id==userid);
+    //if data not found in User
+    if(!userdata){
+        return res.status(404).json({message:"User Not Found"});
+    }
+    //send user data for requested id
+    res.status(200).send(userdata);
+})
