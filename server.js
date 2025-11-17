@@ -202,3 +202,17 @@ app.put("/user/:id",validatefields,(req,res)=>{
     User.push(userdata);
     res.status(201).json({ message: 'User data updated', data: userdata });
 })
+
+//to delete user from User
+app.delete("/user/:id",(req,res)=>{
+    const userid=req.params.id;//to get id value from url 
+    const userdata=User.find((user)=>user.id==userid);
+    //if data not found in User
+    if(!userdata){
+        return res.status(404).json({message:"User Not Found"});
+    }
+    //filter all data except mentioned userid
+    const filteredusers=User.filter((user)=>user.id!=userid);
+    //send data as response
+    res.status(200).send("user deleted");
+})
