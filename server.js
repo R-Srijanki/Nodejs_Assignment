@@ -13,6 +13,14 @@ app.use((req,res,next)=>{
     next();
 });
 
+//middleware to check for required fields for put and post routes
+function validatefields(req,res,next){
+    const {firstName,lastName,hobbies}=req.body;
+    if(!firstName) return res.status(400).send("firstName is required");
+    if(!hobbies) return res.status(400).send("hobbies is required");
+    next();
+}
+
 //data
 const User=[
   {
